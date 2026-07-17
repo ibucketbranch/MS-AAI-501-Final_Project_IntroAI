@@ -1,0 +1,21 @@
+name: Ruff Linter
+on: [push, pull_request]
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Run Ruff Lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: "check --output-format=concise"
+
+      # Optional (recommended): also enforce PEP 8 formatting. Tue's team CI ran
+      # lint only. Uncomment to fail the build on formatting drift too.
+      # - name: Run Ruff Format Check
+      #   uses: astral-sh/ruff-action@v3
+      #   with:
+      #     args: "format --check"

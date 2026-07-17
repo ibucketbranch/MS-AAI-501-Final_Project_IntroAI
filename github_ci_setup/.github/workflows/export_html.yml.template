@@ -1,0 +1,66 @@
+# OPTIONAL - adapted from Tue's AAI-500 "Export HTML Report" workflow.
+# Converts your main analysis notebook to a self-contained HTML report and
+# commits it to artifacts/ on every push to main. The notebook is converted
+# AS-IS (not executed), so commit it WITH its cell outputs to get a full report.
+#
+# DO NOT enable this until ALL of the following are true, or the run will fail:
+#   1. Rename this file to  export_html.yml  (drop the .template extension).
+#   2. The notebook path below exists (edit NOTEBOOK_PATH to your real notebook).
+#   3. You have added a deploy key secret so the bot can push back to main:
+#        - Generate a key:  ssh-keygen -t ed25519 -C "aai501-ci" -f deploy_key
+#        - Repo > Settings > Deploy keys > Add deploy key: paste deploy_key.pub,
+#          check "Allow write access".
+#        - Repo > Settings > Secrets and variables > Actions > New secret:
+#          name DEPLOY_KEY_MAIN, value = contents of the private deploy_key file.
+#
+# Solo note: the team version also had a "Merge Notebooks" workflow that combined
+# multiple members' notebooks into one. That is team-only and is intentionally
+# omitted here - solo, you maintain a single notebook.
+
+name: Export HTML Report
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  export-html:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.DEPLOY_KEY_MAIN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install nbconvert
+        run: pip install "nbconvert>=7.0.0"
+
+      - name: Convert notebook to HTML
+        run: |
+          jupyter nbconvert --to html src/analysis.ipynb \
+            --output AAI-501-Final-Report \
+            --output-dir artifacts
+
+      - name: Commit HTML artifact
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add artifacts/AAI-501-Final-Report.html
+          if git diff --cached --quiet; then
+            echo "No changes to HTML - skipping commit."
+          else
+            git commit -m "chore: regenerate AAI-501-Final-Report.html [skip ci]"
+            for attempt in 1 2 3; do
+              git pull --rebase origin main && git push && break
+              echo "push attempt $attempt failed - retrying"
+              sleep 3
+            done
+          fi

@@ -1,0 +1,54 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Michael Valderrama//AAI-501 Project Work Blocks//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+X-WR-CALNAME:AAI-501 Project Work Blocks
+BEGIN:VTIMEZONE
+TZID:America/Los_Angeles
+BEGIN:DAYLIGHT
+TZOFFSETFROM:-0800
+TZOFFSETTO:-0700
+TZNAME:PDT
+DTSTART:19700308T020000
+RRULE:FREQ=YEARLY;BYMONTH=3;BYDAY=2SU
+END:DAYLIGHT
+BEGIN:STANDARD
+TZOFFSETFROM:-0700
+TZOFFSETTO:-0800
+TZNAME:PST
+DTSTART:19701101T020000
+RRULE:FREQ=YEARLY;BYMONTH=11;BYDAY=1SU
+END:STANDARD
+END:VTIMEZONE
+BEGIN:VEVENT
+UID:aai501-proj-m0-20260717@bucketbranch.com
+DTSTAMP:20260717T041500Z
+SEQUENCE:1
+DTSTART;TZID=America/Los_Angeles:20260717T130000
+DTEND;TZID=America/Los_Angeles:20260717T150000
+SUMMARY:AAI-501 Project: repo + CI + pull data
+DESCRIPTION:M0 + start of M3. Slotted at 1pm to stay clear of the 9am Friday discussion/assignment block.\n\n1. Create the GitHub project repo and README.\n2. Push the staged CI from github_ci_setup/ (lint.yml + ruff.toml) and confirm the Ruff Linter check goes green in Actions.\n3. Download LLMRouterBench bench-release (github.com/ynulihao/LLMRouterBench).\n4. Reshape the JSON records from wide per-model to long/tidy.\n\nGitHub is a graded requirement and the repo is not live yet.
+LOCATION:Home
+END:VEVENT
+BEGIN:VEVENT
+UID:aai501-proj-eda-label-20260718@bucketbranch.com
+DTSTAMP:20260717T041500Z
+SEQUENCE:1
+DTSTART;TZID=America/Los_Angeles:20260718T150000
+DTEND;TZID=America/Los_Angeles:20260718T173000
+SUMMARY:AAI-501 Project: EDA + DEFINE THE ROUTING LABEL
+DESCRIPTION:M3 core. Slotted at 3pm to stay clear of the 10am Saturday deep-work block and the 1pm Status Update prep block already on the calendar.\n\n1. EDA: cost and score distributions per model, token counts, task mix.\n2. DEFINE THE ROUTING LABEL: the cheapest model that clears a quality threshold.\n\nThe label rule is the highest-risk design decision in this project. Write the threshold down and be ready to defend it. Plan a sensitivity check so it does not look arbitrary.
+LOCATION:Home
+END:VEVENT
+BEGIN:VEVENT
+UID:aai501-proj-baseline-20260719@bucketbranch.com
+DTSTAMP:20260717T041500Z
+SEQUENCE:1
+DTSTART;TZID=America/Los_Angeles:20260719T130000
+DTEND;TZID=America/Los_Angeles:20260719T153000
+SUMMARY:AAI-501 Project: features + baseline router (4.3 ready)
+DESCRIPTION:M3 finish - sets up the 4.3 Status Update due Mon Jul 20. Slotted at 1pm to stay clear of the 10am Sunday quiz review block.\n\n1. Light feature set: prompt_tokens, task category. No text embeddings (keeps preprocessing light).\n2. Baseline logistic regression router.\n3. Reference baselines: always-cheapest and always-strongest cost + quality.\n4. Split by prompt so the same prompt never lands on both sides of train/test (leakage guard).\n5. Write up the 4.3 Status Update from these results.
+LOCATION:Home
+END:VEVENT
+END:VCALENDAR
