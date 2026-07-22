@@ -16,6 +16,9 @@
 | `src/routing_label.py` | The routing label rule: cheapest model clearing the quality threshold |
 | `notebooks/01_eda.ipynb` | EDA: cost and quality landscape of the 13-model pool |
 | `notebooks/02_labels_and_baseline.ipynb` | Label construction, threshold sensitivity, baseline logistic router vs always-cheapest and always-strongest |
+| `notebooks/03_tuned_router.ipynb` | Tuned random forest vs logistic router, confusion matrix, feature importances |
+| `notebooks/04_cost_regression.ipynb` | Cost regression (second algorithm type) and regressor-derived routing |
+| `notebooks/05_comparison.ipynb` | All strategies head to head, threshold sensitivity, OpenRouter reference, published context |
 | `tests/` | Smoke tests for the label rule (run by CI) |
 | `report/` | Report drafts for the final deliverable |
 
@@ -27,13 +30,17 @@ python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
 .venv/bin/jupyter nbconvert --to notebook --execute --inplace notebooks/01_eda.ipynb notebooks/02_labels_and_baseline.ipynb
 ```
 
-**Baseline results so far** (test prompts, quality threshold 1.0)
+**Results** (2,434 held-out test prompts, quality threshold 1.0)
 
 | Strategy | Mean cost (USD) | Mean score |
 |----------|-----------------|------------|
-| Always cheapest | 0.0008 | 0.43 |
-| Always strongest | 0.0615 | 0.60 |
-| Logistic router | 0.0115 | 0.56 |
-| Oracle label | 0.0055 | 0.82 |
+| Regressor-derived router | 0.0006 | 0.51 |
+| Always cheapest (deepseek-v3-0324) | 0.0008 | 0.43 |
+| Best single value (qwen3-235b-a22b-2507) | 0.0009 | 0.54 |
+| Oracle label (ceiling) | 0.0055 | 0.82 |
+| Random forest router (tuned) | 0.0073 | 0.54 |
+| Logistic router (tuned) | 0.0115 | 0.56 |
+| OpenRouter (reference) | 0.0225 | 0.50 |
+| Always strongest (gemini-2.5-pro) | 0.0615 | 0.60 |
 
 **Planning docs** from the proposal phase live in the repo root (`Project_Breakdown_Milestones.md`, `Final_Team_Project_Plan.md`, proposal PDFs).
