@@ -1,0 +1,28 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  ruff:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Ruff Lint
+        uses: astral-sh/ruff-action@v3
+        with:
+          args: "check --output-format=concise"
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          pip install pytest
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+      - name: Run tests (skip cleanly if none exist)
+        run: |
+          if [ -d tests ]; then pytest -q; else echo "No tests/ directory yet, skipping."; fi

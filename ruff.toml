@@ -1,0 +1,18 @@
+# Ruff config for the AAI-501 project (PEP 8). Place at the repo root as
+# ruff.toml, or merge the [tool.ruff] equivalents into pyproject.toml.
+# Tue's CI ran `ruff check` with the action's defaults; this makes the rules
+# explicit and adds notebook + import-sort checks. Adjust line-length if your
+# team/instructor expects the classic 79.
+
+line-length = 88
+target-version = "py311"
+extend-include = ["*.ipynb"]   # lint Jupyter notebooks too
+
+[lint]
+# E,W = pycodestyle (PEP 8), F = pyflakes, I = isort, UP = pyupgrade,
+# B = flake8-bugbear. A solid, not-too-noisy baseline.
+select = ["E", "W", "F", "I", "UP", "B"]
+ignore = ["E501"]   # let the formatter handle line length; remove to enforce hard wrap
+
+[format]
+quote-style = "double"
