@@ -22,6 +22,6 @@ Two required algorithm types were trained. For classification, a multinomial log
 
 The regressor was converted into a third routing strategy by pairing it with a capability screen computed on training data only: a model counted as capable on a task category if it solved at least half of that category's training prompts, and each test prompt was routed to the cheapest predicted-price capable model, falling back to the cheapest model where no model qualified (hle and swe-bench).
 
-## References (to verify for APA 7)
+## References
 
-Li, Y., et al. (2026). LLMRouterBench: A massive benchmark and unified framework for LLM routing. Findings of ACL 2026. arXiv:2601.07206. [author list needs verification against the arXiv record before submission]
+Li, H., Zhang, Y., Guo, Z., Wang, C., Tang, S., Zhang, Q., Chen, Y., Qi, B., Ye, P., Bai, L., Wang, Z., & Hu, S. (2026). LLMRouterBench: A massive benchmark and unified framework for LLM routing. Findings of ACL 2026. arXiv:2601.07206. (Author list verified against the arXiv record on Jul 21.)
