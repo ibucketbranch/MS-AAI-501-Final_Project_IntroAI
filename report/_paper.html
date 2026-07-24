@@ -59,9 +59,9 @@ routing actually earns against baselines that are allowed to win.</p>
 that records how 13 flagship models answered the same prompts, along
 with the tokens used, the dollar cost, and a quality score for each
 answer. Flattening the release files produced 173,688 prompt-model
-records across 12,166 usable prompts spanning nine task datasets, from
-factual lookup to competition math and software engineering. The
-benchmark also ships per-prompt results for OpenRouter, a commercial
+records across 12,166 usable prompts spanning nine task datasets
+including factual recall, competition math, and software engineering.
+The benchmark also ships per-prompt results for OpenRouter, a commercial
 routing service, which I set aside as a reference strategy and never
 used in training.</p>
 <p>The routing label came from the recorded data rather than from my
@@ -88,7 +88,7 @@ to the supervised learning and model evaluation material in the course
 (Poole &amp; Mackworth, 2023, Chapter 7): two algorithm families,
 hyperparameter tuning by cross-validation, feature importance, and an
 experimental comparison presented graphically.</p>
-<p>Two scope limits were set deliberately. Features stayed light, prompt
+<p>I set two scope limits deliberately. Features stayed light, prompt
 length, token counts, and task category, with no text embeddings, so the
 results measure what cheap pre-call signals can do on their own. And
 everything ran as offline replay against recorded outcomes; the routers
@@ -106,8 +106,8 @@ or 1; arenahard also awards 0.5 for a draw against a reference
 answer.</p>
 <p>I flattened the released JSON files into one long table of 173,688
 prompt-model records covering 12,446 prompts. The analysis needed the
-full 13-model menu for every prompt, which forced two honest exclusions:
-the tau2 dataset dropped out entirely because one model, gpt-5-chat, was
+full 13-model menu for every prompt, which forced two exclusions: the
+tau2 dataset dropped out entirely because one model, gpt-5-chat, was
 never run on it, and two prompts whose query text did not align across
 models were removed. The working sample was 12,166 prompts across nine
 datasets. Everything is measured public data; my preprocessing was
@@ -122,14 +122,14 @@ reasoning that when every answer fails, the only objective left is
 minimizing spend. The sensitivity threshold of 0.5, which additionally
 accepts arenahard draws as capable, relabeled 2.1 percent of prompts.
 Section 4 shows the conclusions did not move.</p>
-<p>Features were restricted to information available before any model is
-called: the prompt’s character length, the median prompt-token count
+<p>I restricted the features to information available before any model
+is called: the prompt’s character length, the median prompt-token count
 across the model pool as a tokenizer-neutral size measure, and the task
-category. The 80/20 train/test split was stratified by dataset and made
-at the prompt level. Because the modeling table holds one row per
-prompt, no prompt can appear on both sides of the split, which avoids
-the leakage a row-level split of the long table would have created,
-since the same prompt appears there thirteen times.</p>
+category. I made the 80/20 split at the prompt level, stratified by
+dataset. Because the modeling table holds one row per prompt, no prompt
+can appear on both sides of the split, which avoids the leakage a
+row-level split of the long table would have created, since the same
+prompt appears there thirteen times.</p>
 <h2 id="algorithms-theory-and-specification">Algorithms: Theory and
 Specification</h2>
 <p>The classification task is multiclass: given a prompt’s features,
@@ -156,7 +156,7 @@ decorrelate the trees, so the ensemble cuts variance without the
 single-tree tendency to overfit. The same cross-validation search
 selected 300 trees with unrestricted depth, again with no class
 weighting. The forest also supplies impurity-based feature importances,
-which the rubric asks for and Figure 3 reports.</p>
+shown in Figure 3.</p>
 <p>The second required algorithm type is regression: predict the dollar
 cost of a specific prompt-model call from the same pre-call features
 plus the model identity. Costs span four orders of magnitude and 2,226
@@ -301,11 +301,11 @@ did not move at the reported precision, the random forest shifted by
 $0.0003 in cost and 0.002 in score, and the oracle ceiling dipped from
 0.822 to 0.813. No strategy ranking changed, so the threshold-1.0
 results carry the report.</p>
-<p>The oracle row deserves its own sentence. Perfect routing would score
-0.822 at $0.0055 per prompt, cheaper than the tuned random forest
-actually ran. Near-perfect routing is not expensive; the difficulty is
-informational, not economic. The gap between the trained routers and the
-oracle is the price of predicting from pre-call features alone.</p>
+<p>Perfect routing would score 0.822 at $0.0055 per prompt, cheaper than
+the tuned random forest actually ran. Near-perfect routing is not
+expensive; the difficulty is informational, not economic. The gap
+between the trained routers and the oracle is the price of predicting
+from pre-call features alone.</p>
 <h2 id="discussion">Discussion</h2>
 <p>Two comparisons discipline these results. The first is the best fixed
 single model. Sending every prompt to qwen3-235b-a22b-2507 scored 0.538
@@ -331,8 +331,8 @@ this setting with up to a 4 percent performance gain over the best
 single model or a 31.7 percent cost saving at held accuracy, but it does
 so with substantially heavier inputs, query embeddings and clustered
 model-expertise profiles, than the deliberately light feature set used
-here. That is the honest trade my scope limit bought: cheap signals get
-most of the economics and stop short of the ceiling.</p>
+here. That is the trade my scope limit bought: cheap signals get most of
+the economics and stop short of the ceiling.</p>
 <p>The instructor suggested one stretch experiment that turned into the
 most memorable result. Instead of a trained classifier, I handed the
 routing decision to an LLM (claude-haiku-4.5): for each of 300
@@ -348,7 +348,8 @@ uses (in 13 of 300 replies it started solving the prompt instead of
 naming a model and fell back to the cheapest option). Three different
 approaches, a trained classifier, a cost regressor with a capability
 screen, and a prompted LLM, converged on the same conclusion: the hard
-part of routing is not picking per request, it is knowing your menu.</p>
+part of routing turned out to be knowing the menu, not picking per
+request.</p>
 <p>The limitations are the flip side of the design choices. Everything
 rests on one benchmark’s recorded runs, in English, scored mostly
 binary. Offline replay means the routers were never exposed to live
@@ -371,12 +372,12 @@ machine learning at all, a pattern the benchmark’s own authors report at
 full scale. The oracle ceiling, 0.822 at half a cent per prompt, says
 the remaining gap is informational rather than economic, and the
 published state of the art crosses it with query embeddings. That is the
-natural next experiment: keep the same honest evaluation frame and test
-whether embedding-based features close the gap that pre-call signals
-cannot. For a team running LLMs at scale, the practical takeaway from
-this project is to measure the menu before investing in the router,
-because the accountant’s first finding was that one line item does most
-of the work.</p>
+natural next experiment: keep the same evaluation frame and test whether
+embedding-based features close the gap that pre-call signals cannot. For
+a team running LLMs at scale, the practical takeaway from this project
+is to measure the menu before investing in the router, because the
+accountant’s first finding was that one line item does most of the
+work.</p>
 <h2 id="references">References</h2>
 <p>Breiman, L. (2001). Random forests. Machine Learning, 45(1), 5-32.
 https://doi.org/10.1023/A:1010933404324</p>
