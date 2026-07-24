@@ -67,7 +67,35 @@ Table 1. Strategy comparison on the held-out test set (threshold 1.0).
 
 The spread is wide for strategies consuming identical traffic. The logistic router achieved the highest quality among the trained strategies, 0.564, which recovers 94 percent of the always-strongest score at 19 percent of its cost. The random forest router landed close to the fixed qwen model on quality at eight times its price. The regressor-derived router produced the cheapest routing on the chart, undercutting even the always-cheapest fixed model, because no single model is the cheapest on every prompt; it bought that economy with a quality discount.
 
+**Figure 1**
+
+*Cost versus quality on the held-out test prompts: every routing strategy and each of the 13 models as a fixed strategy (cost on a log scale).*
+
+![Figure 1. Cost versus quality on the held-out test prompts: every routing strategy and each of the 13 models as a fixed strategy (cost on a log scale).](figures/figure1_frontier.png)
+
+
 The confusion matrix of the winning classifier (Figure 2, classes ordered cheap to expensive) shows the errors are not random: most confusion happens between adjacent cheap models, where the price difference is small, and the model rarely mistakes a cheap-solvable prompt for a frontier-only one. The forest's feature importances (Figure 3) rank task category first by a wide margin, then prompt length. That matches the exploratory picture from Figure 4: which model solves a prompt depends far more on what kind of task it is than on how long it is.
+
+**Figure 2**
+
+*Confusion matrix of the tuned logistic router on the test prompts, classes ordered cheapest to most expensive.*
+
+![Figure 2. Confusion matrix of the tuned logistic router on the test prompts, classes ordered cheapest to most expensive.](figures/figure2_confusion_matrix.png)
+
+
+**Figure 3**
+
+*Impurity-based feature importances from the tuned random forest router.*
+
+![Figure 3. Impurity-based feature importances from the tuned random forest router.](figures/figure3_importances.png)
+
+
+**Figure 4**
+
+*Mean score per model per source dataset (rows ordered cheap to expensive): task category separates the models far more than prompt size does.*
+
+![Figure 4. Mean score per model per source dataset (rows ordered cheap to expensive): task category separates the models far more than prompt size does.](figures/figure4_score_heatmap.png)
+
 
 Rebuilding the labels at threshold 0.5 relabeled 2.1 percent of prompts. Retrained on those labels, the logistic router's test numbers did not move at the reported precision, the random forest shifted by $0.0003 in cost and 0.002 in score, and the oracle ceiling dipped from 0.822 to 0.813. No strategy ranking changed, so the threshold-1.0 results carry the report.
 
