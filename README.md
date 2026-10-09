@@ -44,3 +44,7 @@ python3.13 -m venv .venv && .venv/bin/pip install -r requirements.txt
 | Always strongest (gemini-2.5-pro) | 0.0615 | 0.60 |
 
 **Planning docs** from the proposal phase live in the repo root (`Project_Breakdown_Milestones.md`, `Final_Team_Project_Plan.md`, proposal PDFs).
+
+**Author**
+
+Michael Valderrama, MS in Applied AI and Data Science at the University of San Diego. The cost-aware routing question here overlaps with independent research I publish at [bucketbranch.ai](https://bucketbranch.ai/), which measures what AI agent architectures cost to run.
